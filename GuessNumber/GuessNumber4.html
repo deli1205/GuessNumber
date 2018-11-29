@@ -1,0 +1,177 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>猜數字遊戲</title>
+<link href="style/style.css" rel="stylesheet" type="text/css" id="css">
+<script type="text/javascript" src="jquery-1.12.2.js"></script>
+<script>
+	var ans;
+	var Gus;
+	var rec;
+	var cnts=0;
+	var cntm=0;
+	var ttime;
+	var Cnt;
+	
+	function timedCount()
+	{
+		if(cnts>60)
+		{
+			cntm=Math.round(cnts/60);
+			document.getElementById("header").innerHTML=cntm+"分"+(cnts%60)+"秒";
+		}else{
+		document.getElementById("header").innerHTML=cnts+"秒";
+		}
+		cnts=cnts+1;
+		ttime=setTimeout("timedCount()",1000);
+	}
+	
+	function stopCount()
+	{
+		cnts=0;
+		setTimeout("document.getElementById(\"header\").innerHTML=\"start\"",0);
+		clearTimeout(ttime);
+	}
+
+	
+	function CheckSameS(s)
+	{
+		var fg = "false"; 
+	    for(i=0; i<3; i++)
+	    {
+	        for(j=i+1; j<5; j++)
+		    { 
+				if( s.substring(i,i+1)==s.substring(j,j+1)) 
+				{ return "true"; }  
+			}
+	    }  
+     	return "false";  
+	}
+	
+	function MakeAns(x,y)
+   	{
+		
+	  cnt=0;
+	  rec="";
+	  document.getElementById("test").innerHTML="";
+	  do{
+		  	n=Number(x)+Math.round(Math.random()*(y-x+1));
+		    ans=n+""; 
+		 } 
+	  while( CheckSameS(ans)=="true" );
+	  if(cnts==0)
+	  {
+	  	timedCount();
+	  }
+
+	  $("#header").css('background','#C69');	  
+   	}
+
+	function CheckAns(g)
+	{
+		
+		if(g.length!=4)
+		{
+			$("#test").text("請輸入4個數字！！！！！");
+			$(".basket").text("");
+		}
+		else if(CheckSameS(g)=="true")
+		{
+			$("#test").text("有數字重複！！！！");
+			$(".basket").text("");
+		}
+		else
+		{	
+			cnt=cnt+1;	
+			A=0; B=0;
+			for(i=0; i<4; i=i+1)
+			{
+				p = g.substring(i,i+1);
+				k = ans.indexOf(p);
+				if( k>=0 ){ if( k==i ) { A=A+1; } else { B=B+1; } }
+			}
+			if(A==4){  
+				alert("恭喜過關！！花了"+cntm+"分"+(cnts%60)+"秒　，　猜了"+cnt+"次");
+				
+				if(user=prompt("請在輸入框輸入您的稱呼",""))
+				{
+					var xmlhttp;	
+					xmlhttp=new XMLHttpRequest();
+					xmlhttp.open("GET","Tran.php?d1="+user+"&d2="+cnts+"&d3="+cnt,true);
+					xmlhttp.send();			
+				}
+				if(confirm("是否觀看排行"))
+				{
+					location.href="rank.php";
+				}
+				stopCount();
+			}
+			rec="<li>"+Gus+"　　　　"+A+"A"+B+"B"+"</li>"+rec;
+			document.getElementById("test").innerHTML=rec;
+			$(".basket").text("");
+		}
+	}
+	
+	function inputNum(c)
+	{
+		if(c=="c")
+		{
+			 $(".basket").text("");
+		}
+		else if(c=="e")
+		{
+			Gus=$("#basket01").text()+$("#basket02").text()+$("#basket03").text()+$("#basket04").text();
+			CheckAns(Gus);
+		}
+		else if($("#basket01").text()=="")
+		{
+			$("#basket01").text(c);
+		}
+		else if($("#basket02").text()=="")
+		{
+			$("#basket02").text(c);
+		}
+		else if($("#basket03").text()=="")
+		{
+			$("#basket03").text(c);
+		}
+		else if($("#basket04").text()=="")
+		{
+			$("#basket04").text(c);
+		}
+	}
+
+
+</script>
+</head>
+		
+
+<!-------------------------------------------------------->
+<!---------------------Body------------------------------->
+<!-------------------------------------------------------->
+<body>
+	<div class="wrap">
+    	<div id="header" onClick="MakeAns('1023','9876')">start</div>
+        <div class="basket" id="basket01"></div>
+        <div class="basket" id="basket02"></div>
+        <div class="basket" id="basket03"></div>
+        <div class="basket" id="basket04"></div>
+        <div id="test" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+  		<img class="ball" id="ball0" name="0" src="img/0.png"/ onClick="inputNum(this.name)">
+        <img class="ball" id="ball1" name="1" src="img/1.png"/ onClick="inputNum(this.name)">  
+        <img class="ball" id="ball2" name="2" src="img/2.png"/ onClick="inputNum(this.name)">  
+        <img class="ball" id="ball3" name="3" src="img/3.png"/ onClick="inputNum(this.name)">  
+        <img class="ball" id="ball4" name="4" src="img/4.png"/ onClick="inputNum(this.name)">  
+        <img class="ball" id="ball5" name="5" src="img/5.png"/ onClick="inputNum(this.name)">  
+        <img class="ball" id="ball6" name="6" src="img/6.png"/ onClick="inputNum(this.name)">  
+        <img class="ball" id="ball7" name="7" src="img/7.png"/ onClick="inputNum(this.name)">  
+        <img class="ball" id="ball8" name="8" src="img/8.png"/ onClick="inputNum(this.name)">
+        <img class="ball" id="ball9" name="9" src="img/9.png"/ onClick="inputNum(this.name)">
+        <img class="ball" id="ballc" name="c" src="img/c.png"/ onClick="inputNum(this.name)"> 
+        <img class="ball" id="balle" name="e" src="img/e.png"/ onClick="inputNum(this.name)">            
+        <div id="ｉｎｆｏ">
+       		
+     	</div>       
+    </div>
+</body>
+</html>
